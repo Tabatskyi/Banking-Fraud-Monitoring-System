@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: advanceddb_01assignment_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+volumes:
+  pgdata:
