@@ -13,5 +13,21 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql
 
+  refresh_cron:
+    image: alpine:3.20
+    container_name: advanceddb_01assignment_refresh_cron
+    depends_on:
+      - postgres
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: postgres
+      PGUSER: postgres
+      PGPASSWORD: supersecretpassword
+    volumes:
+      - ./cron/root:/etc/crontabs/root:ro
+      - ./cron/refresh_mview.sh:/opt/cron/refresh_mview.sh:ro
+    command: ["sh", "-c", "apk add --no-cache postgresql-client && chmod +x /opt/cron/refresh_mview.sh && crond -f -l 8 -L /var/log/cron.log"]
+
 volumes:
   pgdata:
